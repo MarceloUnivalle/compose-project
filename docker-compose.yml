@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    ports:
+      - "7000:5000"
+    volumes:
+      - .:/code
+    environment:
+      FLASK_DEBUG: "true"
+  postgres:
+    image: "postgres:latest"
+    container_name: flask_api_db
+    environment:
+      - DATABASE_HOST=postgres
+      - POSTGRES_DB=flask_api
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - ./sql/1schema.sql:/docker-entrypoint-initdb.d/1schema.sql
+      - ./sql/2data.sql:/docker-entrypoint-initdb.d/2data.sql
+    ports:
+     - "5555:5432"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
