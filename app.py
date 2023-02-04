@@ -43,12 +43,12 @@ def delete_counter_value():
             retries -= 1
             time.sleep(0.5)
 
-# Funcion auxiliar para el endpoint del metodo PUT
-def put_counter_value(value):
+# Funcion auxiliar para el endpoint del metodo PUT y POST
+def update_counter_value(value):
     retries = 5
     while True:
         try:
-            cursor.execute('UPDATE Contador SET count = count + {} WHERE id = 1;'.format(value))
+            cursor.execute('UPDATE Contador SET count = {} WHERE id = 1;'.format(value))
             cursor.execute('SELECT count FROM Contador;')
             rows = cursor.fetchall()
             res = None
@@ -60,19 +60,6 @@ def put_counter_value(value):
                 raise exc
             retries -= 1
             time.sleep(0.5)
-
-# Funcion auxiliar para el endpoint del metodo POST
-def post_counter_value(value):
-    retries = 5
-    while True:
-        try:
-            return 1 # Placeholder
-        except conn.Error as exc:
-            if retries == 0:
-                raise exc
-            retries -= 1
-            time.sleep(0.5)
-
 
 # curl -i -X GET http://localhost:7000/counter
 @app.route('/counter', methods=['GET'])
@@ -87,13 +74,8 @@ def delete_method():
     return 'Contador reiniciado exitosamente.\nEl valor del contador es de {} unidades.\n'.format(counter)
 
 # curl -i -X PUT http://localhost:7000/counter/<int:value>
-@app.route('/counter/<int:value>', methods=['PUT'])
-def put_method(value):
-    counter = put_counter_value(value)
-    return 'Contador actualizado exitosamente.\nEl valor del contador es de {} unidades.\n'.format(counter)
-
 # curl -i -X POST http://localhost:7000/counter/<int:value>
-@app.route('/counter/<int:value>', methods=['POST'])
-def post_method(value):
-    counter = post_counter_value(value)
+@app.route('/counter/<int:value>', methods=['PUT', 'POST'])
+def update_method(value):
+    counter = update_counter_value(value)
     return 'Valor asignado exitosamente al contador.\nEl valor del contador es de {} unidades.\n'.format(counter)

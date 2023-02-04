@@ -8,6 +8,8 @@ services:
       - .:/code
     environment:
       FLASK_DEBUG: "true"
+    depends_on:
+      - "postgres"
   postgres:
     image: "postgres:latest"
     container_name: flask_api_db
@@ -21,12 +23,12 @@ services:
       - ./sql/2data.sql:/docker-entrypoint-initdb.d/2data.sql
     ports:
      - "5555:5432"
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
-      PGADMIN_DEFAULT_PASSWORD: "admin"
-    ports:
-      - "80:80"
-    depends_on:
-      - postgres
+#  pgadmin:
+#    image: dpage/pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+#      PGADMIN_DEFAULT_PASSWORD: "admin"
+#    ports:
+#      - "80:80"
+#    depends_on:
+#      - postgres
