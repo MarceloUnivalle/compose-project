@@ -9,8 +9,6 @@ services:
       - .:/code
     environment:
       FLASK_DEBUG: "true"
-    depends_on:
-      - "postgres"
   postgres:
     image: "postgres:latest"
     container_name: flask_api_db
